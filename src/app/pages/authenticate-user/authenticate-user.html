@@ -1,0 +1,67 @@
+<main class="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex w-full max-w-4xl overflow-hidden">
+
+    <div class="hidden lg:flex w-1/2 bg-blue-600 items-center justify-center p-12 text-white flex-col relative">
+      <div class="absolute inset-0 bg-black opacity-20"></div>
+      <div class="relative z-10 text-center">
+        <h1 class="text-4xl font-bold mb-3">SGA</h1>
+        <p class="text-xl font-light">Sistema de Gestão de Ativos</p>
+        <p class="mt-8 border-t border-blue-400 pt-4 text-blue-200">Controle total sobre seus equipamentos de TI.</p>
+      </div>
+    </div>
+
+    <div class="w-full lg:w-1/2 p-8 md:p-12">
+      <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">Acessar sua Conta</h2>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="mb-5">
+          <label for="login" class="block mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Email</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+              </svg>
+            </div>
+            <input type="text" id="login" formControlName="login" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="seu.email@empresa.com">
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <div class="flex justify-between items-center">
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Senha</label>
+            <a href="#" class="text-xs text-blue-600 hover:underline dark:text-blue-500">Esqueceu a senha?</a>
+          </div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <input type="password" id="password" formControlName="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="••••••••">
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="form.invalid || isSubmitting" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-blue-400 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex items-center justify-center cursor-pointer">
+
+          <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+
+          <span *ngIf="isSubmitting">Autenticando...</span>
+          <span *ngIf="!isSubmitting">Entrar</span>
+        </button>
+
+        <button routerLink="/register" type="submit" class="w-full text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 mt-2 py-2.5 text-center disabled:bg-green-400 disabled:cursor-not-allowed dark:bg-green-600 dark:green:bg-blue-700 dark:focus:ring-blue-800 flex items-center justify-center cursor-pointer">
+
+          <span>Registrar-se</span>
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+</main>

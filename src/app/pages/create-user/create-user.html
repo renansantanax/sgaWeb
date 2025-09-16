@@ -1,0 +1,75 @@
+<main class="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex w-full max-w-4xl overflow-hidden">
+
+    <div class="hidden lg:flex w-1/2 bg-blue-600 items-center justify-center p-12 text-white flex-col relative">
+      <div class="absolute inset-0 bg-black opacity-20"></div>
+      <div class="relative z-10 text-center">
+        <h1 class="text-4xl font-bold mb-3">SGA</h1>
+        <p class="text-xl font-light">Crie sua Conta de Acesso</p>
+        <p class="mt-8 border-t border-blue-400 pt-4 text-blue-200">Organização e eficiência para seus ativos de TI.</p>
+      </div>
+    </div>
+
+    <div class="w-full lg:w-1/2 p-8 md:p-12">
+      <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Registro de Novo Usuário</h2>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div *ngIf="mensagemSucesso" class="mb-4 p-3 text-sm text-green-800 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300">
+          {{ mensagemSucesso }}
+        </div>
+        <div *ngIf="mensagemErro" class="mb-4 p-3 text-sm text-red-800 bg-red-100 rounded-lg dark:bg-red-900 dark:text-red-300">
+          {{ mensagemErro }}
+        </div>
+
+        <div class="mb-5 relative">
+          <label for="name" class="block mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Nome Completo</label>
+          <input type="text" id="name" formControlName="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Seu nome completo">
+          <div *ngIf="form.get('name')?.invalid && (form.get('name')?.dirty || form.get('name')?.touched)" class="absolute top-full mt-1 left-0 w-full z-10 p-2 text-xs text-red-800 bg-red-100 rounded-md shadow-md dark:bg-red-900 dark:text-red-300">
+            <span *ngIf="form.get('name')?.errors?.['required']">O nome é obrigatório.</span>
+            <span *ngIf="form.get('name')?.errors?.['minlength']">O nome deve ter no mínimo 3 caracteres.</span>
+            <span *ngIf="form.get('name')?.errors?.['maxlength']">O nome deve ter no máximo 100 caracteres.</span>
+          </div>
+        </div>
+
+        <div class="mb-5 relative">
+          <label for="username" class="block mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Username (para login)</label>
+          <input type="text" id="username" formControlName="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Ex: joao.silva">
+          <div *ngIf="form.get('username')?.invalid && (form.get('username')?.dirty || form.get('username')?.touched)" class="absolute top-full mt-1 left-0 w-full z-10 p-2 text-xs text-red-800 bg-red-100 rounded-md shadow-md dark:bg-red-900 dark:text-red-300">
+            <span *ngIf="form.get('username')?.errors?.['required']">O username é obrigatório.</span>
+            <span *ngIf="form.get('username')?.errors?.['minlength']">O username deve ter no mínimo 3 caracteres.</span>
+            <span *ngIf="form.get('username')?.errors?.['maxlength']">O username deve ter no máximo 50 caracteres.</span>
+          </div>
+        </div>
+
+        <div class="mb-5 relative">
+          <label for="password" class="block mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Senha</label>
+          <input type="password" id="password" formControlName="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="••••••••">
+          <div *ngIf="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)" class="absolute top-full mt-1 left-0 w-full z-10 p-2 text-xs text-red-800 bg-red-100 rounded-md shadow-md dark:bg-red-900 dark:text-red-300">
+            <span *ngIf="form.get('password')?.errors?.['required']">A senha é obrigatória.</span>
+            <span *ngIf="form.get('password')?.errors?.['pattern']">A senha deve ter no mínimo 8 caracteres, com maiúscula, minúscula, número e caractere especial.</span>
+          </div>
+        </div>
+
+        <div class="mb-6 relative">
+          <label for="confirmPassword" class="block mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Confirmar Senha</label>
+          <input type="password" id="confirmPassword" formControlName="confirmPassword" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Repita a senha">
+          <div *ngIf="form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.dirty || form.get('confirmPassword')?.touched)" class="absolute top-full mt-1 left-0 w-full z-10 p-2 text-xs text-red-800 bg-red-100 rounded-md shadow-md dark:bg-red-900 dark:text-red-300">
+            <span *ngIf="form.get('confirmPassword')?.errors?.['required']">A confirmação da senha é obrigatória.</span>
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="form.invalid" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-blue-400 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Criar Conta
+        </button>
+
+        <p class="text-sm font-light text-gray-500 dark:text-gray-400 mt-6 text-center">
+          Já tem uma conta? <a routerLink="/login" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Faça login aqui</a>
+        </p>
+
+      </form>
+    </div>
+
+  </div>
+</main>
