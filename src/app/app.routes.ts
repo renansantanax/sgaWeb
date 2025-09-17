@@ -5,6 +5,7 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { authGuard } from './guards/auth-guard';
 import { redirectIfAuthenticatedGuard } from './guards/redirect-if-authenticated-guard';
 import { Collaborators } from './pages/collaborators/collaborators';
+import { CreateEquipmentComponent } from './pages/create-equipment/create-equipment.component';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,11 @@ export const routes: Routes = [
   {
     path: 'collaborators',
     component: Collaborators,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'equipment/new',
+    component: CreateEquipmentComponent,
     canActivate: [authGuard],
   },
   {
