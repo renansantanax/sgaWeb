@@ -151,4 +151,17 @@ export class Dashboard implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  // DELETAR EQUIPAMENTO
+  deleteEq(id: number) {
+    this.equipamentoService.delete(id).subscribe({
+      next: (data: any) => {
+        console.log(data);
+        this.fetch();
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
+  }
 }

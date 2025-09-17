@@ -17,16 +17,8 @@ export class CreateEquipmentComponent implements OnInit {
   successMessage: string | null = null;
 
   // Opções para os selects do formulário
-  tiposDeEquipamento = [
-    'NOTEBOOK',
-    'DESKTOP',
-    'MONITOR',
-    'SMARTPHONE',
-    'TABLET',
-    'PERIFERICO',
-    'OUTRO',
-  ];
-  statusInicial = ['EM_ESTOQUE', 'DISPONIVEL']; // Um novo equipamento não pode ser criado "EM_USO"
+  tiposDeEquipamento = ['NOTEBOOK', 'DESKTOP', 'MONITOR', 'IMPRESSORA', 'PERIFERICO', 'OUTRO'];
+  statusInicial = ['DISPONIVEL', 'ESTOQUE']; // Um novo equipamento não pode ser criado "EM_USO"
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -38,7 +30,7 @@ export class CreateEquipmentComponent implements OnInit {
       marca: ['', [Validators.required, Validators.minLength(2)]],
       modelo: ['', [Validators.required]],
       serviceTag: ['', [Validators.required]],
-      statusEquipamento: ['EM_ESTOQUE', [Validators.required]],
+      statusEquipamento: ['DISPONIVEL', [Validators.required]],
       dataFimGarantia: [''],
       hostname: [''],
       ip: ['', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
@@ -73,22 +65,20 @@ export class CreateEquipmentComponent implements OnInit {
     this.errorMessage = null;
     this.successMessage = null;
 
-    // =================================================================
-    // TODO: AQUI VOCÊ DEVE IMPLEMENTAR A CHAMADA PARA SUA API
-    // this.equipamentoService.create(this.addForm.value).subscribe({
-    //   next: (response) => {
-    //     this.successMessage = `Equipamento "${response.modelo}" criado com sucesso!`;
-    //     this.addForm.reset();
-    //     this.isSubmitting = false;
-    //     // Opcional: redirecionar após um tempo
-    //     setTimeout(() => this.router.navigate(['/equipamentos']), 2000);
-    //   },
-    //   error: (err) => {
-    //     this.errorMessage = err.error.message || 'Ocorreu um erro ao criar o equipamento.';
-    //     this.isSubmitting = false;
-    //   }
-    // });
-    // =================================================================
+    this.equipamentoService.create(this.addForm.value).subscribe({
+      next: (response) => {
+        this.successMessage = `Equipamento "${response.modelo}" criado com sucesso!`;
+        this.addForm.reset();
+        this.isSubmitting = false;
+        // Opcional: redirecionar após um tempo
+        setTimeout(() => this.router.navigate(['/dashboard']), 2000);
+      },
+      error: (err) => {
+        this.errorMessage = err.error.message || 'Ocorreu um erro ao criar o equipamento.';
+        this.isSubmitting = false;
+        console.log(err);
+      },
+    });
 
     // Simulação de chamada de API para demonstrar o estado de loading e sucesso
     console.log('Dados do formulário:', this.addForm.value);

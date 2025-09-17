@@ -2,113 +2,119 @@
   <div class="max-w-4xl mx-auto">
 
     <header class="mb-8">
-      <button (click)="onCancel()" class="flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 mb-4 transition-colors">
+      <button (click)="onCancel()" class="flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 mb-4 transition-colors duration-200">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
-        Voltar para a lista
+        Voltar para a lista de equipamentos
       </button>
-      <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Adicionar Novo Equipamento</h1>
-      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Preencha os campos abaixo para registrar um novo ativo no inventário.</p>
+      <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Adicionar Novo Equipamento</h1>
+      <p class="mt-2 text-base text-slate-500 dark:text-slate-400">Preencha os campos abaixo para registrar um novo ativo no inventário do SGA.</p>
     </header>
 
-    <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 sm:p-8">
-      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" novalidate>
+    <form [formGroup]="addForm" (ngSubmit)="onSubmit()" novalidate class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 sm:p-8 space-y-8">
 
-        <div *ngIf="successMessage" class="mb-6 p-4 text-sm text-green-800 bg-green-100 rounded-lg dark:bg-green-900/40 dark:text-green-300">
-          {{ successMessage }}
-        </div>
-        <div *ngIf="errorMessage" class="mb-6 p-4 text-sm text-red-800 bg-red-100 rounded-lg dark:bg-red-900/40 dark:text-red-300">
-          {{ errorMessage }}
-        </div>
+      <div *ngIf="successMessage" class="p-4 text-sm text-green-800 bg-green-100 rounded-lg dark:bg-green-900/40 dark:text-green-300 transition-all duration-300">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="p-4 text-sm text-red-800 bg-red-100 rounded-lg dark:bg-red-900/40 dark:text-red-300 transition-all duration-300">
+        {{ errorMessage }}
+      </div>
 
-        <div class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="relative">
-              <label for="tipoEquipamento" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo de Equipamento*</label>
-              <select id="tipoEquipamento" formControlName="tipoEquipamento" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition">
-                <option value="" disabled>Selecione um tipo</option>
-                <option *ngFor="let tipo of tiposDeEquipamento" [value]="tipo">{{ tipo | titlecase }}</option>
-              </select>
-              <div *ngIf="tipoEquipamento?.invalid && (tipoEquipamento?.dirty || tipoEquipamento?.touched)" class="absolute top-full mt-1 text-xs text-red-500">
-                <span>Tipo é obrigatório.</span>
-              </div>
-            </div>
-            <div>
-              <label for="statusEquipamento" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Status Inicial*</label>
-              <select id="statusEquipamento" formControlName="statusEquipamento" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition">
-                <option *ngFor="let status of statusInicial" [value]="status">{{ status.replace('_', ' ') | titlecase }}</option>
-              </select>
-            </div>
-          </div>
+      <fieldset class="space-y-6">
+        <legend class="text-lg font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 w-full">Identificação do Ativo</legend>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="relative">
-              <label for="marca" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Marca*</label>
-              <input id="marca" formControlName="marca" type="text" placeholder="Ex: Dell, Apple, Lenovo" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition">
-              <div *ngIf="marca?.invalid && (marca?.dirty || marca?.touched)" class="absolute top-full mt-1 text-xs text-red-500">
-                <span *ngIf="marca?.errors?.['required']">Marca é obrigatória.</span>
-                <span *ngIf="marca?.errors?.['minlength']">Mínimo 2 caracteres.</span>
-              </div>
-            </div>
-            <div class="relative">
-              <label for="modelo" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Modelo*</label>
-              <input id="modelo" formControlName="modelo" type="text" placeholder="Ex: Latitude 5420, MacBook Pro 14" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition">
-              <div *ngIf="modelo?.invalid && (modelo?.dirty || modelo?.touched)" class="absolute top-full mt-1 text-xs text-red-500">
-                <span>Modelo é obrigatório.</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="relative">
-              <label for="serviceTag" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Service Tag / Serial Number*</label>
-              <input id="serviceTag" formControlName="serviceTag" type="text" placeholder="Número de série único" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition">
-              <div *ngIf="serviceTag?.invalid && (serviceTag?.dirty || serviceTag?.touched)" class="absolute top-full mt-1 text-xs text-red-500">
-                <span>Service Tag é obrigatória.</span>
-              </div>
-            </div>
-            <div>
-              <label for="dataFimGarantia" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Fim da Garantia</label>
-              <input id="dataFimGarantia" formControlName="dataFimGarantia" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="hostname" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Hostname</label>
-              <input id="hostname" formControlName="hostname" type="text" placeholder="Ex: NOTE-FIN-01" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition">
-            </div>
-            <div class="relative">
-              <label for="ip" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Endereço IP</label>
-              <input id="ip" formControlName="ip" type="text" placeholder="Ex: 192.168.1.50" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition">
-              <div *ngIf="ip?.invalid && (ip?.dirty || ip?.touched)" class="absolute top-full mt-1 text-xs text-red-500">
-                <span>Formato de IP inválido.</span>
-              </div>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="relative">
+            <label for="tipoEquipamento" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo de Equipamento*</label>
+            <select id="tipoEquipamento" formControlName="tipoEquipamento" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition" [ngClass]="{'border-slate-300 dark:border-slate-600': !tipoEquipamento?.invalid, 'border-red-500 dark:border-red-600': tipoEquipamento?.invalid && (tipoEquipamento?.dirty || tipoEquipamento?.touched)}">
+              <option value="" disabled>Selecione um tipo</option>
+              <option *ngFor="let tipo of tiposDeEquipamento" [value]="tipo">{{ tipo | titlecase }}</option>
+            </select>
+            <div *ngIf="tipoEquipamento?.invalid && (tipoEquipamento?.dirty || tipoEquipamento?.touched)" class="absolute top-full mt-1 text-xs text-red-500"><span>Tipo é obrigatório.</span></div>
           </div>
 
           <div>
-            <label for="observacoes" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Observações</label>
-            <textarea id="observacoes" formControlName="observacoes" rows="3" placeholder="Qualquer informação adicional sobre o equipamento..." class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition"></textarea>
+            <label for="statusEquipamento" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Status Inicial*</label>
+            <select id="statusEquipamento" formControlName="statusEquipamento" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 outline-none focus:ring-2 focus:ring-blue-500 transition cursor-not-allowed">
+              <option *ngFor="let status of statusInicial" [value]="status">{{ status.replace('_', ' ') | titlecase }}</option>
+            </select>
           </div>
         </div>
 
-        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3">
-          <button (click)="onCancel()" type="button" class="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 rounded-lg border border-slate-300 dark:border-slate-600 transition-colors">
-            Cancelar
-          </button>
-          <button type="submit" [disabled]="addForm.invalid || isSubmitting" class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center">
-            <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
-            <span>{{ isSubmitting ? 'Salvando...' : 'Salvar Equipamento' }}</span>
-          </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="relative">
+            <label for="marca" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Marca*</label>
+            <input id="marca" formControlName="marca" type="text" placeholder="Ex: Dell, Apple" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500" [ngClass]="{'border-slate-300 dark:border-slate-600': !marca?.invalid, 'border-red-500 dark:border-red-600': marca?.invalid && (marca?.dirty || marca?.touched)}">
+            <div *ngIf="marca?.invalid && (marca?.dirty || marca?.touched)" class="absolute top-full mt-1 text-xs text-red-500"><span *ngIf="marca?.errors?.['required']">Marca é obrigatória.</span><span *ngIf="marca?.errors?.['minlength']">Mínimo 2 caracteres.</span></div>
+          </div>
+
+          <div class="relative">
+            <label for="modelo" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Modelo*</label>
+            <input id="modelo" formControlName="modelo" type="text" placeholder="Ex: Latitude 5420" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500" [ngClass]="{'border-slate-300 dark:border-slate-600': !modelo?.invalid, 'border-red-500 dark:border-red-600': modelo?.invalid && (modelo?.dirty || modelo?.touched)}">
+            <div *ngIf="modelo?.invalid && (modelo?.dirty || modelo?.touched)" class="absolute top-full mt-1 text-xs text-red-500"><span>Modelo é obrigatório.</span></div>
+          </div>
         </div>
 
-      </form>
-    </section>
+        <div class="relative">
+          <label for="serviceTag" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Service Tag / Serial Number*</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+              </svg>
+            </div>
+            <input id="serviceTag" formControlName="serviceTag" type="text" placeholder="Número de série único do fabricante" class="w-full pl-10 pr-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500" [ngClass]="{'border-slate-300 dark:border-slate-600': !serviceTag?.invalid, 'border-red-500 dark:border-red-600': serviceTag?.invalid && (serviceTag?.dirty || serviceTag?.touched)}">
+          </div>
+          <div *ngIf="serviceTag?.invalid && (serviceTag?.dirty || serviceTag?.touched)" class="absolute top-full mt-1 text-xs text-red-500"><span>Service Tag é obrigatória.</span></div>
+        </div>
+      </fieldset>
+
+      <fieldset class="space-y-6">
+        <legend class="text-lg font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 w-full">Detalhes Adicionais</legend>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="dataFimGarantia" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Fim da Garantia</label>
+            <input id="dataFimGarantia" formControlName="dataFimGarantia" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition">
+          </div>
+        </div>
+
+        <div>
+          <label for="observacoes" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Observações</label>
+          <textarea id="observacoes" formControlName="observacoes" rows="3" placeholder="Qualquer informação adicional: detalhes da compra, estado do equipamento, etc." class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="space-y-6">
+        <legend class="text-lg font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 w-full">Informações de Rede (Opcional)</legend>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="hostname" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Hostname</label>
+            <input id="hostname" formControlName="hostname" type="text" placeholder="Ex: NOTE-FIN-01" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500">
+          </div>
+          <div class="relative">
+            <label for="ip" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Endereço IP</label>
+            <input id="ip" formControlName="ip" type="text" placeholder="Ex: 192.168.1.50" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500" [ngClass]="{'border-slate-300 dark:border-slate-600': !ip?.invalid, 'border-red-500 dark:border-red-600': ip?.invalid && (ip?.dirty || ip?.touched)}">
+            <div *ngIf="ip?.invalid && (ip?.dirty || ip?.touched)" class="absolute top-full mt-1 text-xs text-red-500"><span>Formato de IP inválido.</span></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3">
+        <button (click)="onCancel()" type="button" class="px-5 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 rounded-xl border border-slate-300 dark:border-slate-600 transition-colors duration-200 cursor-pointer">
+          Cancelar
+        </button>
+        <button type="submit" [disabled]="addForm.invalid || isSubmitting" class="px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center shadow-lg transform hover:scale-105 cursor-pointer">
+          <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <span>{{ isSubmitting ? 'Salvando...' : 'Salvar Equipamento' }}</span>
+        </button>
+      </div>
+
+    </form>
 
   </div>
 </main>

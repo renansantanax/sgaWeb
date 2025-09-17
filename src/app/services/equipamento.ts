@@ -24,6 +24,18 @@ export interface Equipamento {
   colaborador: ColaboradorResumido | null;
 }
 
+export interface EquipamentoRequest {
+  tipoEquipamento: string;
+  statusEquipamento: string;
+  marca: string;
+  modelo: string;
+  serviceTag: string;
+  hostname?: string | null;
+  ip?: string | null;
+  dataFimGarantia?: string | null; // em ISO: '2025-09-17'
+  observacoes?: string | null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -43,6 +55,22 @@ export class EquipamentoService {
 
   getAllEquipments(): Observable<Equipamento[]> {
     return this.http.get<Equipamento[]>(`${this.apiUrl}/listar`);
+  }
+
+  create(dto: EquipamentoRequest): Observable<EquipamentoRequest> {
+    return this.http.post<EquipamentoRequest>(`${this.apiUrl}/criar`, dto);
+  }
+
+  delete(id: number) {
+    return this.http.delete(`${this.apiUrl}/deletar/${id}`, { responseType: 'text' });
+  }
+
+  getById(id: string) {
+    return this.http.get(`${this.apiUrl}/buscar/${id}`);
+  }
+
+  update(id: string, dto: EquipamentoRequest) {
+    return this.http.put(`${this.apiUrl}/atualizar/${id}`, dto, { responseType: 'text' });
   }
 
   // TODO: Adicionar outros métodos conforme necessário (getById, create, update, etc.)
