@@ -164,4 +164,83 @@ export class Dashboard implements OnInit, OnDestroy {
       },
     });
   }
+
+  exportToCsv(): void {
+    const dataToExport = this.filtered(); // Usamos os dados já filtrados na tela
+
+    if (dataToExport.length === 0) {
+      alert('Não há dados para exportar.');
+      return;
+    }
+
+    const headers = [
+      'ID',
+      'Tipo',
+      'Marca',
+      'Modelo',
+      'Service Tag',
+      'Status',
+      'Colaborador',
+      'Email do Colaborador',
+      'Fim da Garantia',
+    ];
+
+    // Mapeia cada objeto de equipamento para uma linha de CSV
+    const rows = dataToExport.map((eq) =>
+      [
+        eq.id,
+        eq.tipoEquipamento,
+        eq.marca,
+        eq.modelo,
+        eq.serviceTag,
+        eq.statusEquipamento.replace('_', ' '),
+        eq.colaborador?.nome || 'N/A', // Trata o caso de não haver colaborador
+        eq.colaborador?.email || 'N/A',
+        new Date(eq.dataFimGarantia).toLocaleDateString('pt-BR'), // Formata a data
+      ]
+        .map(this.escapeCsvCell)
+        .join(',')
+    ); // Limpa cada célula e junta com vírgulas
+
+    // Junta o cabeçalho e as linhas de dados
+    const csvContent = [headers.join(','), ...rows].join('\n');
+
+    this.downloadCsv(csvContent);
+  }
+
+  /**
+   * Prepara uma célula para o formato CSV, tratando vírgulas e aspas.
+   */
+  private escapeCsvCell(cellData: any): string {
+    const dataString = String(cellData ?? ''); // Garante que é uma string, mesmo se for null/undefined
+    if (dataString.includes(',') || dataString.includes('"') || dataString.includes('\n')) {
+      // Se a célula contém caracteres especiais, a envolvemos em aspas duplas
+      // e escapamos as aspas duplas existentes, duplicando-as.
+      return `"${dataString.replace(/"/g, '""')}"`;
+    }
+    return dataString;
+  }
+
+  /**
+   * Inicia o download do arquivo CSV no navegador.
+   */
+  private downloadCsv(csvContent: string): void {
+    // A MUDANÇA ESTÁ AQUI: Adicionamos '\uFEFF' no início do Blob.
+    // Este é o caractere BOM (Byte Order Mark) para UTF-8.
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    const date = new Date().toISOString().split('T')[0];
+    link.setAttribute('href', url);
+    link.setAttribute('download', `export_equipamentos_${date}.csv`);
+
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  }
 }

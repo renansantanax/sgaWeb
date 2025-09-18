@@ -1,12 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, NgZone, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EquipamentoService } from '../../services/equipamento';
+import { EquipamentoRequest, EquipamentoService } from '../../services/equipamento';
 
 @Component({
   selector: 'app-edit-equipment',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './edit-equipment.html',
   styleUrl: './edit-equipment.css',
 })
@@ -14,10 +21,8 @@ export class EditEquipment implements OnInit {
   editForm!: FormGroup;
   equipamentoId: string | null = null;
 
-  isSubmitting = false;
-  isLoading = true; // Começa como true para mostrar o loading enquanto busca os dados
   errorMessage: string | null = null;
-  successMessage: string | null = null;
+  successMessage = false;
 
   tiposDeEquipamento = [
     'NOTEBOOK',
@@ -30,77 +35,61 @@ export class EditEquipment implements OnInit {
   ];
   statusDisponiveis = ['EM_ESTOQUE', 'DISPONIVEL', 'EM_USO', 'EM_MANUTENCAO'];
 
+  // Injeção de dependências agora no construtor
   private fb = inject(FormBuilder);
+  private activated = inject(ActivatedRoute);
   private router = inject(Router);
-  private route = inject(ActivatedRoute); // Injeta a rota ativa para pegar o ID
   private equipamentoService = inject(EquipamentoService);
 
+  equipamento: any;
+
+  form = new FormGroup({
+    tipoEquipamento: new FormControl('', [Validators.required]),
+    marca: new FormControl('', [Validators.required]),
+    modelo: new FormControl('', [Validators.required]),
+    serviceTag: new FormControl('', [Validators.required]),
+    statusEquipamento: new FormControl('', [Validators.required]),
+    dataFimGarantia: new FormControl(''),
+    hostname: new FormControl(''),
+    ip: new FormControl(''),
+    observacoes: new FormControl(''),
+  });
+
   ngOnInit(): void {
-    // 1. Cria a estrutura do formulário (vazio por enquanto)
-    this.editForm = this.fb.group({
-      tipoEquipamento: ['', [Validators.required]],
-      marca: ['', [Validators.required, Validators.minLength(2)]],
-      modelo: ['', [Validators.required]],
-      serviceTag: ['', [Validators.required]],
-      statusEquipamento: ['', [Validators.required]],
-      dataFimGarantia: [''],
-      hostname: [''],
-      ip: [''],
-      observacoes: [''],
-    });
-
-    // 2. Pega o ID da URL
-    this.equipamentoId = this.route.snapshot.paramMap.get('id');
-
-    // 3. Se encontrou um ID, busca os dados do equipamento na API
-    if (this.equipamentoId) {
-      this.loadEquipamentoData(this.equipamentoId);
-    } else {
-      this.errorMessage = 'ID do equipamento não fornecido.';
-      this.isLoading = false;
-    }
-  }
-
-  loadEquipamentoData(id: string): void {
-    this.equipamentoService.getById(id).subscribe({
-      next: (data) => {
-        // 4. Preenche o formulário com os dados recebidos
-        this.editForm.patchValue(data);
-        this.isLoading = false;
-        console.log('brotei aqui');
-        console.log(this.editForm.value);
+    this.equipamentoId = this.activated.snapshot.paramMap.get('id') as string;
+    this.equipamentoService.getById(this.equipamentoId).subscribe({
+      next: (data: any) => {
+        this.form.controls.tipoEquipamento.setValue(data.tipoEquipamento);
+        this.form.controls.statusEquipamento.setValue(data.statusEquipamento);
+        this.form.controls.marca.setValue(data.marca);
+        this.form.controls.serviceTag.setValue(data.serviceTag);
+        this.form.controls.modelo.setValue(data.modelo);
+        this.form.controls.ip.setValue(data.ip);
+        this.form.controls.observacoes.setValue(data.observacoes);
+        this.equipamento = data;
       },
-      error: (err) => {
-        this.errorMessage = 'Erro ao carregar os dados do equipamento.';
-        this.isLoading = false;
+      error: (e) => {
+        console.log(e);
       },
     });
   }
 
-  onSubmit(): void {
-    if (this.editForm.invalid || !this.equipamentoId) {
-      this.editForm.markAllAsTouched();
-      return;
-    }
-
-    this.isSubmitting = true;
-    this.errorMessage = null;
-    this.successMessage = null;
-
-    this.equipamentoService.update(this.equipamentoId, this.editForm.value).subscribe({
-      next: (response: any) => {
-        this.successMessage = `Equipamento "${response.modelo}" atualizado com sucesso!`;
-        this.isSubmitting = false;
-        setTimeout(() => this.router.navigate(['/equipamentos']), 2000);
-      },
-      error: (err) => {
-        this.errorMessage = err.error.message || 'Ocorreu um erro ao atualizar o equipamento.';
-        this.isSubmitting = false;
-      },
-    });
+  onSubmit() {
+    this.equipamentoService
+      .update(this.equipamentoId!, this.form.value as EquipamentoRequest)
+      .subscribe({
+        next: (data) => {
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 600);
+        },
+        error: (e) => {
+          console.log(e);
+        },
+      });
   }
 
   onCancel(): void {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard']); // Ajustei para a lista de equipamentos, pode ser /dashboard também
   }
 }

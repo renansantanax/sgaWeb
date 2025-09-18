@@ -18,7 +18,7 @@
           </svg>
           Adicionar
         </button>
-        <button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 bg-white/70 dark:bg-slate-900/60 hover:bg-white/90 dark:hover:bg-slate-900 transition">
+        <button (click)="exportToCsv()" [disabled]="isLoading() || total() === 0" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 bg-white/70 dark:bg-slate-900/60 hover:bg-white/90 dark:hover:bg-slate-900 transition">
           Exportar CSV
         </button>
       </div>

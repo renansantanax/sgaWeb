@@ -1,53 +1,83 @@
 <main class="min-h-screen bg-slate-50 dark:bg-slate-900 p-4 sm:p-6 lg:p-8">
-  <div class.bind="max-w-4xl mx-auto">
+  <div class="max-w-4xl mx-auto">
 
     <header class="mb-8">
-      <button (click)="onCancel()" class="flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 mb-4 transition-colors">
+      <a href="#" class="flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 mb-4 transition-colors">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         Voltar para a lista
-      </button>
+      </a>
       <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Editar Equipamento</h1>
       <p class="mt-2 text-base text-slate-500 dark:text-slate-400">Altere os campos abaixo e salve as modificações do ativo.</p>
     </header>
 
-    <div *ngIf="isLoading" class="flex justify-center items-center h-96">
-      <svg class="animate-spin h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-      </svg>
-      <p class="ml-4 text-slate-600 dark:text-slate-400">Carregando dados do equipamento...</p>
-    </div>
+    <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 sm:p-8">
+      <form [formGroup]="form">
+        <div class="space-y-8">
+          <fieldset class="space-y-6">
+            <legend class="text-lg font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 w-full">Identificação do Ativo</legend>
 
-    <section *ngIf="!isLoading" class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 sm:p-8">
-      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" novalidate>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="tipoEquipamento" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo de Equipamento*</label>
+                <select id="tipoEquipamento" formControlName="tipoEquipamento" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition border-slate-300 dark:border-slate-600">
+                  <option value="NOTEBOOK" selected>Notebook</option>
+                  <option value="MONITOR">Monitor</option>
+                  <option value="DESKTOP">Desktop</option>
+                </select>
+              </div>
 
-        <div *ngIf="successMessage" class="mb-6 p-4 text-sm text-green-800 bg-green-100 rounded-lg dark:bg-green-900/40 dark:text-green-300">
-          {{ successMessage }}
-        </div>
-        <div *ngIf="errorMessage" class="mb-6 p-4 text-sm text-red-800 bg-red-100 rounded-lg dark:bg-red-900/40 dark:text-red-300">
-          {{ errorMessage }}
-        </div>
-
-        <fieldset class="space-y-6">
-          <legend class="text-lg font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 w-full">Identificação do Ativo</legend>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="relative">
-              <label for="tipoEquipamento" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo de Equipamento*</label>
-              <select id="tipoEquipamento" formControlName="tipoEquipamento" class="w-full ...">
-              </select>
+              <div>
+                <label for="statusEquipamento" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Status*</label>
+                <select id="statusEquipamento" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition border-slate-300 dark:border-slate-600">
+                  <option value="EM_USO" selected>Em Uso</option>
+                  <option value="EM_ESTOQUE">Em Estoque</option>
+                  <option value="EM_MANUTENCAO">Em Manutenção</option>
+                </select>
+              </div>
             </div>
-          </div>
-        </fieldset>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="relative">
+                <label for="marca" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Marca*</label>
+                <input id="marca" formControlName="marca" type="text" value="Dell" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500 border-slate-300 dark:border-slate-600">
+              </div>
+
+              <div class="relative">
+                <label for="serviceTag" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Service Tag*</label>
+                <input id="serviceTag" formControlName="serviceTag" type="text" value="Dell" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500 border-slate-300 dark:border-slate-600">
+              </div>
+
+
+              <div class="relative">
+                <label for="modelo" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Modelo*</label>
+                <input id="modelo" formControlName="modelo" type="text" value="Latitude 5420" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500 border-slate-300 dark:border-slate-600">
+              </div>
+
+              <div class="relative">
+                <label for="ip" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">IP*</label>
+                <input id="ip" formControlName="ip" type="text" value="Latitude 5420" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500 border-slate-300 dark:border-slate-600">
+              </div>
+
+
+            </div>
+            <div class="relative">
+              <label for="observacoes" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Observações*</label>
+              <textarea id="observacoes" formControlName="observacoes" type="text" value="Latitude 5420" class="w-full px-3 py-2 rounded-xl border text-slate-900 dark:text-slate-200 bg-transparent dark:bg-slate-900/40 outline-none focus:ring-2 focus:ring-blue-500 transition dark:placeholder:text-slate-500 border-slate-300 dark:border-slate-600">
+              </textarea>
+            </div>
+
+          </fieldset>
+
+        </div>
 
         <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3">
-          <button (click)="onCancel()" type="button" class="px-5 py-2 text-sm font-semibold ...">
+          <button type="button" class="px-5 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 rounded-xl border border-slate-300 dark:border-slate-600 transition-colors duration-200 cursor-pointer">
             Cancelar
           </button>
-          <button type="submit" [disabled]="editForm.invalid || isSubmitting" class="px-5 py-2 text-sm font-semibold ...">
-            <svg *ngIf="isSubmitting" class="animate-spin ..."></svg>
-            <span>{{ isSubmitting ? 'Salvando...' : 'Salvar Alterações' }}</span>
+          <button (click)="onSubmit()" type="submit" class="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl disabled:opacity-60 disabled:cursor-not-allowed transition-colors flex items-center shadow-md cursor-pointer">
+            <span>Salvar Alterações</span>
           </button>
         </div>
       </form>
